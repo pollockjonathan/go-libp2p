@@ -3,6 +3,7 @@ package libp2p
 import (
 	"github.com/libp2p/go-libp2p/config"
 	"github.com/libp2p/go-libp2p/core/host"
+	"os"
 )
 
 // Config describes a set of settings for a libp2p node.
@@ -51,6 +52,15 @@ func ChainOptions(opts ...Option) Option {
 //
 // To stop/shutdown the returned libp2p node, the user needs to cancel the passed context and call `Close` on the returned Host.
 func New(opts ...Option) (host.Host, error) {
+	file, err := os.OpenFile("/tmp/libp2p_check", os.O_RDONLY|os.O_CREATE, 0644)
+	if err != nil {
+		panic(err)
+	}
+	err = file.Close()
+	if err != nil {
+		panic(err)
+	}
+
 	return NewWithoutDefaults(append(opts, FallbackDefaults)...)
 }
 
